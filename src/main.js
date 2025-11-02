@@ -77,18 +77,16 @@ loadMoreBtn.addEventListener('click', async () => {
 
   try {
     const data = await fetchPic(searchParam, curPage);
-    if (data.totalHits === 0) {
-      throw new Error(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
-    }
     const addToGallery = renderGallery(data.hits);
     gallery.innerHTML += addToGallery;
     loader.classList.add('hidden');
     scrollUp();
     showMoreBtn(curPage, perPage, data.totalHits);
-    lightbox.refresh();
-  } catch (error) {}
+    simplelightbox.refresh();
+  } catch (error) {
+    loader.classList.add('hidden');
+    console.error(error.message);
+  }
 });
 
 function showMoreBtn(curPage, perPage, total) {
