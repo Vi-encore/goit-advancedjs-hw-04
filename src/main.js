@@ -13,7 +13,7 @@ const loadMoreBtn = document.querySelector('#load_more_btn');
 
 let curPage = 1;
 let searchParam = '';
-const perPage = 12;
+const perPage = 15;
 
 let simplelightbox = new SimpleLightbox('.gallery_item a', {
   captionsData: 'alt',
