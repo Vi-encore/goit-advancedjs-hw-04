@@ -13,7 +13,7 @@ const loadMoreBtn = document.querySelector('#load_more_btn');
 
 let curPage = 1;
 let searchParam = '';
-const perPage = 15;
+const perPage = 12;
 
 let simplelightbox = new SimpleLightbox('.gallery_item a', {
   captionsData: 'alt',
@@ -53,7 +53,7 @@ form.addEventListener('submit', e => {
       }
 
       const galleryLoaded = renderGallery(data.hits);
-      gallery.innerHTML = galleryLoaded;
+      gallery.insertAdjacentHTML('beforeend', galleryLoaded);
       simplelightbox.refresh();
       loadMoreBtn.classList.remove('hidden');
     })
@@ -76,9 +76,9 @@ loadMoreBtn.addEventListener('click', async () => {
   curPage += 1;
 
   try {
-    const data = await fetchPic(searchParam, curPage);
+    const data = await fetchPic(searchParam, curPage, perPage);
     const addToGallery = renderGallery(data.hits);
-    gallery.innerHTML += addToGallery;
+    gallery.insertAdjacentHTML('beforeend', addToGallery);
     loader.classList.add('hidden');
     scrollUp();
     showMoreBtn(curPage, perPage, data.totalHits);
