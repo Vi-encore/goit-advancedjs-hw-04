@@ -20,7 +20,7 @@ let simplelightbox = new SimpleLightbox('.gallery_item a', {
   captionDelay: 250,
 });
 
-form.addEventListener('submit', e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
 
   searchParam = formInput.value.trim();
@@ -38,35 +38,35 @@ form.addEventListener('submit', e => {
   loadMoreBtn.classList.add('hidden');
   loader.classList.remove('hidden');
 
-  fetchPic(searchParam, curPage, perPage)
-    .then(data => {
-      formInput.value = '';
-      if (data.hits.length === 0) {
-        iziToast.error({
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-          position: 'topRight',
-        });
-        loader.classList.add('hidden');
-        gallery.classList.remove('hidden');
-        return;
-      }
+  try {
+    const data = await fetchPic(searchParam, curPage, perPage);
+    formInput.value = '';
 
-      const galleryLoaded = renderGallery(data.hits);
-      gallery.insertAdjacentHTML('beforeend', galleryLoaded);
-      simplelightbox.refresh();
-      loadMoreBtn.classList.remove('hidden');
-    })
-    .catch(error => {
+    //added double check, because had totalHits = 9, bur hits array was empty
+    if (data.totalHits === 0 || data.hits.length === 0) {
       iziToast.error({
-        message: `${error.message || 'Something went wrong!'}`,
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
         position: 'topRight',
       });
-    })
-    .finally(() => {
       loader.classList.add('hidden');
       gallery.classList.remove('hidden');
+      return;
+    }
+
+    const galleryLoaded = renderGallery(data.hits);
+    gallery.insertAdjacentHTML('beforeend', galleryLoaded);
+    simplelightbox.refresh();
+    loadMoreBtn.classList.remove('hidden');
+  } catch (error) {
+    iziToast.error({
+      message: `${error.message || 'Something went wrong!'}`,
+      position: 'topRight',
     });
+  } finally {
+    loader.classList.add('hidden');
+    gallery.classList.remove('hidden');
+  }
 });
 
 loadMoreBtn.addEventListener('click', async () => {
