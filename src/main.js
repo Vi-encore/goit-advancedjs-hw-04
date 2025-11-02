@@ -85,7 +85,10 @@ loadMoreBtn.addEventListener('click', async () => {
     simplelightbox.refresh();
   } catch (error) {
     loader.classList.add('hidden');
-    console.error(error.message);
+    iziToast.error({
+      message: `${error.message || `Something went wrong! `}`,
+      position: 'topRight',
+    });
   }
 });
 
