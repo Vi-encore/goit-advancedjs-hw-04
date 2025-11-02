@@ -13,7 +13,7 @@ export default function renderGallery(picArr) {
 
     galleryComplete += `<li class='gallery_item'>
     <a href='${largeImageURL}' target="_blank">
-      <img src='${webformatURL}' alt='${tags}' class='gallery_img test'/>
+      <img src='${webformatURL}' alt='${tags}' class='gallery_img'/>
       <div class='gallery_info_wrapper'>
         <p class='gallery_info'>Likes <span>${likes}</span></p>
         <p class='gallery_info'>Views <span>${views}</span></p>
