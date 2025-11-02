@@ -32,8 +32,9 @@ form.addEventListener('submit', async e => {
     });
     return;
   }
-
+  curPage = 1;
   gallery.innerHTML = ''; //cleanup prev gallery
+
   gallery.classList.add('hidden');
   loadMoreBtn.classList.add('hidden');
   loader.classList.remove('hidden');
@@ -54,10 +55,10 @@ form.addEventListener('submit', async e => {
       return;
     }
 
+    showMoreBtn(curPage, perPage, data.totalHits);
     const galleryLoaded = renderGallery(data.hits);
     gallery.insertAdjacentHTML('beforeend', galleryLoaded);
     simplelightbox.refresh();
-    loadMoreBtn.classList.remove('hidden');
   } catch (error) {
     iziToast.error({
       message: `${error.message || 'Something went wrong!'}`,
@@ -94,14 +95,17 @@ loadMoreBtn.addEventListener('click', async () => {
 
 function showMoreBtn(curPage, perPage, total) {
   const totalPages = Math.ceil(total / perPage);
-  if (curPage > totalPages) {
-    return iziToast.info({
-      position: 'topRight',
-      message: "We're sorry, but you've reached the end of search results.",
-    });
-  }
 
-  scrollUp();
+  if (curPage >= totalPages) {
+    loadMoreBtn.classList.add('hidden');
+    if (curPage > 1) {
+      iziToast.info({
+        position: 'topRight',
+        message: "We're sorry, but you've reached the end of search results.",
+      });
+    }
+    return;
+  }
   loadMoreBtn.classList.remove('hidden');
 }
 
